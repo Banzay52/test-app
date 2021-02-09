@@ -1,0 +1,97 @@
+@import ch.insign.cms.views.admin.utils.AdminContext
+@import ch.insign.cms.views.html.admin.shared.layout
+@import ch.insign.cms.views.html.helpers.formKey
+@import ch.insign.playauth.views.helper._
+@import crud.permission.CarPermission
+@import helper._
+@import metronic.{metronicFieldConstructor, text}
+@import crud.data.entity.Brand
+@import crud.data.form.CarForm
+@import scala.compat.java8.OptionConverters.RichOptionalGeneric
+
+@this(layout: layout)
+@(carForm: play.data.Form[CarForm], brands: List[Brand])(implicit req: Http.Request)
+
+@disabledIfLacksEditPermission() = {
+    @lacksPermission(carForm("id").value().asScala.map(_ => CarPermission.EDIT).getOrElse(CarPermission.ADD)) {
+        disabled="disabled"
+    }
+}
+
+@layout(new AdminContext()) {
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-edit"></i>
+                        @carForm("id").getValue.asScala.map { _ =>
+                            @Messages("example.crud.car.edit.title")
+                        }.getOrElse {
+                            @Messages("example.crud.car.add.title")
+                        }
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    @form(carForm("id").value().asScala
+                            .map(id => crud.controller.routes.CarController.doEdit(id.toLong))
+                            .getOrElse(crud.controller.routes.CarController.doAdd), 'class -> "form-horizontal") {
+
+                        @formKey()
+
+                        <fieldset @disabledIfLacksEditPermission >
+                            <div class="form-body">
+                                @carForm("id").value().asScala.map { id =>
+                                    <input type="hidden" name="id" value="@id">
+                                }
+
+                                @text(
+                                    carForm,
+                                    "model",
+                                    Messages("example.crud.car.model"),
+                                    ""
+                                )
+
+                                @text(
+                                    carForm,
+                                    "registrationId",
+                                    Messages("example.crud.car.registrationId"),
+                                    ""
+                                )
+
+                                @text(
+                                    carForm,
+                                    "price",
+                                    Messages("example.crud.car.price"),
+                                    ""
+                                )
+
+                                @helper.select(
+                                    carForm("brand"),
+                                    options = brands.map(b => (b.getId.toString, b.getTitle)).sortBy(_._2),
+                                    'class -> "form-control select2me",
+                                    '_label -> Messages("example.crud.car.brand")
+                                )(FieldConstructor(metronicFieldConstructor.f), implicitJavaMessages)
+
+                                @metronic.datepicker(
+                                    carForm,
+                                    "buyDate",
+                                    Messages("example.crud.car.buyDate"),
+                                    "",
+                                    (a: String) => a
+                                )
+                            </div>
+                        </fieldset>
+                        <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-8">
+                                <button type="submit" @disabledIfLacksEditPermission class="btn red">@Messages("backend.btn.save")
+                                </button>
+                                <a href="@crud.controller.routes.CarController.list()" class="btn default">@Messages("backend.btn.cancel")</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,24 @@
+@import blocks.pageblock.DefaultPage
+@import metronic._
+@this(pageBlockEdit: ch.insign.cms.views.html.admin.pageBlockEdit)
+@(
+        data: DefaultPage,
+        editForm: Form[_],
+        backURL: String
+)(extension: Html = Html(""))(implicit req: Http.Request)
+
+@pageBlockEdit(data, editForm, backURL) {
+    @checkbox(
+        editForm,
+        "showTitle",
+        Messages("page.block.show.title.label")
+    )
+
+    @checkbox(
+        editForm,
+        "activateSlider",
+        Messages("page.block.slider.activate.label")
+    )
+
+    @extension
+}

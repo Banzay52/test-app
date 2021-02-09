@@ -1,0 +1,49 @@
+@(party: Option[ch.insign.playauth.party.Party])
+
+@import ch.insign.playauth.PlayAuth
+@import ch.insign.playauth.PlayAuth.{getAccessControlManager => acm, getPartyRoleManager => prm, getPermissionManager => pm, getSecurityIdentity => toSid}
+@import ch.insign.playauth.authz.DomainPermission
+@import ch.insign.playauth.authz.SecurityIdentity.UNKNOWN
+@import ch.insign.playauth.permissions.PartyRolePermission.{GRANT, REVOKE}
+@import ch.insign.playauth.utils.AuthzFormHandler
+@import ch.insign.playauth.views.helper._
+
+@permissions = @{
+    pm.getDefinedPermissions.filter(PlayAuth.isRestricted).groupBy(_.domain)
+}
+
+@permissionTitle(p: DomainPermission[_], specificTitle: Option[String] = None) = {
+    @specificTitle.map{ title =>
+        @Html(Messages(p.id + ".specific_title", title))
+    }.getOrElse {
+        @Html(Messages(p.id + ".plural_title"))
+    }
+}
+
+@permissionEntry(p: DomainPermission[_], specificTitle: Option[String] = None) = {
+    @defining(AuthzFormHandler.generateAuthzInputName(party.map(toSid).getOrElse(UNKNOWN), p.id)) { inputName =>
+        <p class="input-group">
+            <div class="btn-group">
+                @if(acm.isPermitted(party.get, p)){
+                    <span class="active-perm glyphicon glyphicon-ok-circle"></span>
+                } else {
+                    <span class="inactive-perm glyphicon glyphicon-ban-circle"></span>
+                }
+            </div>
+            &nbsp;@permissionTitle(p, specificTitle)
+        </p>
+    }
+}
+
+@permissions.map { case (domain, ps) =>
+        <h3 class="form-section">@Messages(domain + ".plural_title")</h3>
+        @ps.map { p =>
+            @permissionEntry(p)
+            @* Display whether the given party has GRANT/REVOKE permissions for each role *@
+            @if(p.id == GRANT.id || p.id == REVOKE.id) {
+                @prm.findAll.map { role =>
+                    @permissionEntry(pm.applyTarget(p.asInstanceOf[DomainPermission[Any]], role), Option(role.getName))
+                }
+            }
+        }
+}

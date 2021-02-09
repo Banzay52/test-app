@@ -1,0 +1,41 @@
+@import ch.insign.api.commons.RichMString._
+@import ch.insign.cms.models.Template
+@import ch.insign.cms.models.ContentBlock
+@import ch.insign.cms.views.html.helpers.dateTimeSwiss
+@import crud.data.entity.Car
+@import crud.page.CarInventoryPage
+@import crud.views.helpers.VavrToScala.VavrOptionToScalaOption
+@import views.html.main
+@(data: CarInventoryPage, cars: List[Car])(implicit req: Http.Request)
+<div class="container">
+    <h1>@data.getPageTitle.apply()</h1>
+    <h2>@data.getDealerTitle</h2>
+    <div class="table-responsive table-striped">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Messages("example.crud.car.model")</th>
+                    <th>@Messages("example.crud.car.brand")</th>
+                    <th>@Messages("example.crud.car.registrationId")</th>
+                    <th>@Messages("example.crud.car.price")</th>
+                    <th>@Messages("example.crud.car.buyDate")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(cars.nonEmpty) {
+                    @cars.map { item =>
+                        <tr>
+                            <td>@item.getModel</td>
+                            <td>@item.getBrand.asScala.map(_.getTitle).getOrElse(Messages("example.crud.car.no.brand"))</td>
+                            <td>@item.getRegistrationId</td>
+                            <td>@item.getPrice.asScala.map(p => p.toPlainString).getOrElse("-")</td>
+                            <td>@item.getBuyDate.asScala.map(dateTimeSwiss(_)).getOrElse("-")</td>
+                        <tr>
+                    }
+                } else {
+                    <tr><td colspan="5">@Messages("example.crud.car.no.result")</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+@import blocks.pageblock.DefaultPage
+@import ch.insign.cms.CMSTemplateApi
+@import ch.insign.cms.blocks.horizontalcollection.HorizontalCollectionBlock
+@import ch.insign.cms.models.CollectionBlock
+@import ch.insign.api.commons.RichMString._
+
+@import javax.inject.Provider
+
+@this(templateApi: Provider[CMSTemplateApi])
+@(data: DefaultPage)(implicit req: Http.Request)
+
+<section class="container">
+    @if(data.getDisplayTitle()) { <h1>@data.getPageTitle.apply()</h1> }
+    <div class="row">
+        <div class="col-md-7">
+            @templateApi.get.renderTemplate(templateApi.get.addBlockToSlot(classOf[CollectionBlock], data, "main").context("mainContext"), req)
+        </div>
+        <div class="col-md-5">
+            @templateApi.get.renderTemplate(templateApi.get.addBlockToSlot(classOf[CollectionBlock], data, "sidebar").context("sidebarContext"), req)
+        </div>
+    </div>
+</section>
+@templateApi.get.renderTemplate(templateApi.get.addBlockToSlot(classOf[HorizontalCollectionBlock], data, "bottom").context("bottomContext"), req)

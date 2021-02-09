@@ -1,0 +1,86 @@
+@import ch.insign.cms.CMSApi
+@import ch.insign.cms.models.StandalonePage
+@import data.form.RegisterUserForm
+@import views.html
+@import play.data.Form
+@import ch.insign.playauth.party.ISOGender
+
+@this(cmsApi: CMSApi, main: html.main)
+@(page: StandalonePage, form: Form[RegisterUserForm])(implicit req: Http.Request)
+
+@implicitFieldConstructor = @{ b4.vertical.fieldConstructor() }
+@languages = @{
+    cmsApi.getConfig().frontendLanguages(req).toSeq.map(v => (v, v))
+}
+
+@main(page) {
+    <div class="container">
+        <section class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+                <div class="section-header">
+                    <h3 class="section-title mb-4">@Messages("user.register.new.title")</h3>
+                </div>
+
+                @helper.form(controller.routes.UserController.doRegister, 'id -> "registerNewUser", 'autocomplete -> "off") {
+                    @b4.radio(
+                        form("gender"),
+                        Seq(ISOGender.MALE, ISOGender.FEMALE).map(v => (v.name(), Messages("user.gender." + v.name()))),
+                        '_inline -> true,
+                        '_required -> true
+                    )
+                    @b4.text(
+                        form("firstName"),
+                        '_label -> Messages("user.register.firstName"),
+                        '_required -> true
+                    )
+                    @b4.text(
+                        form("lastName"),
+                        '_label -> Messages("user.register.lastName"),
+                        '_required -> true
+                    )
+                    @b4.email(
+                        form("email"),
+                        '_label -> Messages("user.register.email"),
+                        '_required -> true
+                    )
+                    @b4.tel(
+                        form("phone"),
+                        '_label -> Messages("user.register.phone"),
+                        '_maxlength -> "11"
+                    )
+                    @b4.select(
+                        form("language"),
+                        options = languages,
+                        '_label -> Messages("user.register.language"),
+                        '_default -> Messages("user.register.language.select")
+                    )
+                    @b4.password(
+                        form("password"),
+                        '_label -> Messages("user.register.password"),
+                        '_required -> true,
+                        '_help -> Messages("auth.login.password.pattern.help")
+                    )
+                    @b4.password(
+                        form("repeatPassword"),
+                        '_label -> Messages("user.register.repeatPassword"),
+                        '_required -> true,
+                        'autocomplete -> "new-password"
+                    )
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary flex-grow-1 flex-md-grow-0">@Messages("register.form.submit")</button>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="center-block feedback-section">
+                    <div class="spacer spacer-md"></div>
+                    <h2 class="text-center h5">@Html(Messages("user.register.support"))</h2>
+                    <div class="spacer spacer-md"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

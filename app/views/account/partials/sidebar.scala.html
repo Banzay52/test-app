@@ -1,0 +1,86 @@
+@import ch.insign.cms.models.CMS
+@import party.User
+@import org.apache.commons.lang3.StringUtils
+@import java.io.File
+
+@(user: User)
+@active(call: Call) = {
+    @if(call.url.equals(request.path)) { active }
+}
+
+<div class="profile-sidebar">
+    <h1>@Messages("account.dashboard.title")</h1>
+    <div id="actions" class="row">
+        <div class="col-sm-12" id="initUpload" style="display: none">
+            <ul class="nav">
+            <li class="fileinput-button dz-clickable start">
+                <a href="#" class="btn btn-default" role="button">
+                    <i class="fa fa-plus"></i>
+                    <span>@Messages("account.dashboard.image.save")</span>
+                </a>
+            </li>
+            <li class="cancel">
+                <a href="#" class="btn btn-default" role="button">
+                    <i class="fa fa-ban"></i>
+                    <span>@Messages("account.dashboard.image.cancel")</span>
+                </a>
+            </li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="table table-striped files" id="previews">
+        <div id="template" class="file-row">
+                <!-- This is used as the file preview template -->
+            <div class="profile-userpic fileinput-button dz-clickable">
+                <span class="preview" id="hint" data-hint="@Messages("account.dashboard.image.hint")" data-success="@Messages("account.dashboard.image.success")">
+                    @if(StringUtils.isBlank(user.getImage)){
+                        <img data-dz-thumbnail src="@routes.Assets.versioned("images/avatar.png")" class="img-responsive" id="dropzoneForUserAvatar">
+                    } else{
+                        <img data-dz-thumbnail src="@CMS.getConfig().imageUploadWWWRoot()@File.separator@user.getImage" class="img-responsive" id="dropzoneForUserAvatar">
+                    }
+                </span>
+            </div>
+            <div>
+                <p class="name" data-dz-name></p>
+                <strong class="error text-danger" data-dz-errormessage id="errorWithUploadingFile"></strong>
+            </div>
+            <div>
+                <button class="btn btn-primary start" style="display: none">
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>@Messages("account.dashboard.image.upload")</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-usermenu">
+        <ul class="nav flex-column nav-pills">
+            @if((request.path.equals(controller.routes.AccountController.editProfile.toString)) && (!StringUtils.isBlank(user.getImage))) {
+                <li id="delete-avatar-image" style="display: inline">
+                    <a href="@controller.routes.AccountController.deleteAvatarImage" class="btn btn-default" role="button"
+                            id="delete-image-link" data-confirm-question="@Messages("account.dashboard.image.delete.confirmation")">
+                        <i class="fa fa-trash"></i>
+                        @Messages("account.dashboard.image.delete")
+                    </a>
+                    <br/>
+                </li>
+            }
+            <li class="nav-item">
+                <a href="@controller.routes.AccountController.dashboard" class="nav-link @active(controller.routes.AccountController.dashboard)">
+                    <i class="glyphicon glyphicon-user"></i>
+                    @Messages("account.dashboard.overview") </a>
+            </li>
+            <li class="nav-item">
+                <a href="@controller.routes.AccountController.editProfile" class="nav-link @active(controller.routes.AccountController.editProfile)">
+                    <i class="glyphicon glyphicon-cog"></i>
+                    @Messages("account.dashboard.editProfile")  </a>
+            </li>
+            <li class="nav-item">
+                <a href="@controller.routes.AccountController.editPassword" class="nav-link @active(controller.routes.AccountController.editPassword)">
+                    <i class="glyphicon glyphicon-lock"></i>
+                    @Messages("account.dashboard.editPassword") </a>
+            </li>
+        </ul>
+    </div>
+</div>

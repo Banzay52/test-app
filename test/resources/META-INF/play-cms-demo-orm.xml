@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="1.1" xmlns="http://www.eclipse.org/eclipselink/xsds/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://www.eclipse.org/eclipselink/xsds/persistence/orm http://www.eclipse.org/eclipselink/xsds/eclipselink_orm_1_1.xsd">
+
+    <entity class="party.User"></entity>
+    <entity class="crud.data.entity.Car"></entity>
+    <entity class="crud.data.entity.Brand"></entity>
+    <entity class="crud.page.CarInventoryPage"></entity>
+    <entity class="blocks.errorblock.DefaultErrorPage"></entity>
+    <entity class="blocks.pageblock.DefaultPage"></entity>
+    <entity class="blocks.teaserblock.TeaserBlock"></entity>
+    <entity class="data.model.TokenAction"></entity>
+
+</entity-mappings>

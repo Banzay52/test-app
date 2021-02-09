@@ -1,0 +1,84 @@
+@import ch.insign.cms.CMSApi
+@import ch.insign.cms.models.StandalonePage
+@import views.html
+@import party.User
+@import play.data.Form
+@import data.form.UserProfileForm
+@import ch.insign.playauth.party.ISOGender
+@import views.html.tags._asset
+
+@this(cmsApi: CMSApi, main: html.main)
+@(page: StandalonePage, form: Form[UserProfileForm], user: User)(implicit req: Http.Request)
+
+@implicitFieldConstructor = @{ b4.vertical.fieldConstructor() }
+@languages = @{
+    cmsApi.getConfig().frontendLanguages(req).toSeq.map(v => (v, v))
+}
+
+@footer = {
+    <script src="@_asset("javascripts/dropzone.js")"></script>
+    <script src="@_asset("javascripts/user-avatar-dropzone.js")"></script>
+}
+
+@main(page, footer = footer) {
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                @views.html.account.partials.sidebar.render(user)
+            </div>
+            <div class="col-md-9">
+                <div class="section-header">
+                    <h3 class="section-title"> <i class="glyphicon glyphicon-cog"></i> @Messages("account.dashboard.editProfile")</h3>
+                    <div class="spacer spacer-xs"></div>
+                </div>
+
+                @helper.form(controller.routes.AccountController.doEditProfile, 'autocomplete -> "off") {
+                    @b4.radio(
+                        form("gender"),
+                        Seq(ISOGender.MALE, ISOGender.FEMALE).map(v => (v.name(), Messages("user.gender." + v.name()))),
+                        '_inline -> true,
+                        '_required -> true
+                    )
+                    @b4.text(
+                        form("firstName"),
+                        '_label -> Messages("user.register.firstName"),
+                        '_required -> true
+                    )
+                    @b4.text(
+                        form("lastName"),
+                        '_label -> Messages("user.register.lastName"),
+                        '_required -> true
+                    )
+                    @b4.email(
+                        form("email"),
+                        '_label -> Messages("user.register.email"),
+                        '_required -> true
+                    )
+                    @b4.tel(
+                        form("phone"),
+                        '_label -> Messages("user.register.phone"),
+                        '_maxlength -> "11"
+                    )
+                    @b4.select(
+                        form("language"),
+                        options = languages,
+                        '_label -> Messages("user.register.language"),
+                        '_default -> Messages("user.register.language.select")
+                    )
+                    @b4.password(
+                        form("password"),
+                        '_label -> Messages("account.dashboard.editProfile.password.enter"),
+                        '_required -> true,
+                        '_help -> Messages("account.dashboard.editProfile.password.help"),
+                        'autocomplete -> "new-password"
+                    )
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            @Messages("account.dashboard.edit.submit")
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

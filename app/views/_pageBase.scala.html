@@ -1,0 +1,43 @@
+@import ch.insign.cms.models.PageBlock
+@import ch.insign.cms.views.html._blockBase
+@import ch.insign.cms.views.html.{deleteBlockModal, restrictBlockModal, unrestrictBlockModal}
+@import ch.insign.cms.controllers.AuthController
+@import ch.insign.playauth.views.helper.{hasPermission, anonymous}
+@import ch.insign.cms.permissions.BlockPermission
+@import views.html.user.modals.loginFormModal
+@import ch.insign.cms.views.html.admin.shared.flashPartial
+
+@this(blockBase: _blockBase)
+@(
+        page: ch.insign.cms.models.Page,
+        add: Boolean = false,
+        edit: Boolean = true,
+        delete: Boolean = true,
+        restrict: Boolean = false,
+        name: String = "",
+        color: String = "gray",
+        sortableContainer: Boolean = false,
+        CssClass: String = ""
+)(content: Html)(implicit req: Http.Request)
+
+<body @hasPermission(BlockPermission.MODIFY){class="fe-admin"}>
+    @Some(page).map {
+        case cmsManaged: PageBlock => {
+            @blockBase(cmsManaged, add, edit, delete, restrict, name, color, sortableContainer, CssClass)(content)
+        }
+        case _ => {
+            @*Here could be any standalone specific code*@
+            @content
+        }
+    }
+
+    @anonymous {
+        @loginFormModal(AuthController.LOGIN_FORM, req.flash.getOptional("backUrl").orElse(""), Messages("frontend.login.modal.title"))
+    }
+
+    @hasPermission(BlockPermission.MODIFY) {
+        @deleteBlockModal()
+        @restrictBlockModal()
+        @unrestrictBlockModal()
+    }
+</body>

@@ -1,0 +1,13 @@
+@import ch.insign.cms.blocks.BlockComponentsRegistry
+@import ch.insign.api.commons.RichMString._
+@import blocks.teaserblock.TeaserBlock
+@import views.html.tags._asset
+
+@(data: TeaserBlock)(implicit req: Http.Request)
+
+<img class="card-img-top" src="@data.getLogoUrl.apply()" class="w-100" alt="@data.getTitle.apply()">
+<div class="card-body">
+    <h5 class="card-title">@data.getTitle.apply()</h5>
+    <p class="card-text">@Html(data.getContent.apply())</p>
+    <a href="@data.getLinkUrl.apply()" class="btn btn-primary">@data.getLinkText.apply() &rarr;</a>
+</div>

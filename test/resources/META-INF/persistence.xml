@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+
+    <!-- Persistence Unit for Testing -->
+    <persistence-unit name="defaultPersistenceUnit" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <non-jta-data-source>DefaultDS</non-jta-data-source>
+
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+        <mapping-file>META-INF/play-cms-demo-orm.xml</mapping-file>
+        <mapping-file>META-INF/play-auth-orm.xml</mapping-file>
+        <mapping-file>META-INF/play-cms-orm.xml</mapping-file>
+        <mapping-file>META-INF/play-commons-orm.xml</mapping-file>
+
+        <!-- Note: Currently, orm files with list of entity classes of play cms modules must be listed here, they're not auto-discovered -->
+
+        <properties>
+            <!-- Test configuration -->
+            <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+            <property name="eclipselink.ddl-generation.output-mode" value="database" />
+            <property name="eclipselink.ddl-generation.table-creation-suffix" value="ENGINE=InnoDB;" />
+
+            <property name="eclipselink.logging.exceptions" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>

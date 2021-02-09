@@ -1,0 +1,13 @@
+-Dsbt.global.base=project/.sbtboot
+-Dsbt.boot.directory=project/.boot
+-Dsbt.ivy.home=project/.ivy
+-Denvironment=docker
+-Dconfig.resource=docker.conf
+# Please uncomment next line if you want use debugger on port 9999
+#-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9999
+-J-Xms256m
+-J-Xmx2g
+-J-XX:MaxMetaspaceSize=512m
+# Please uncomment next line if you want to develop the play-cms modules
+# -Dplaycms.version=local
+

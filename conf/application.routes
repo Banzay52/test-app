@@ -1,0 +1,49 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET     /reset                                  controller.SetupController.reset(request: Request)
+
+# Example admin page
+GET     /admin/myapp                            controller.AdminController.myApp(request: Request)
+
+# Example crud
+GET     /admin/car/add                          crud.controller.CarController.add(request: Request)
+POST    /admin/car/add                          crud.controller.CarController.doAdd(request: Request)
+GET     /admin/car/edit/:id                     crud.controller.CarController.edit(request: Request, id: Long)
+POST    /admin/car/edit/:id                     crud.controller.CarController.doEdit(request: Request, id: Long)
+POST    /admin/car/delete/:id                   crud.controller.CarController.delete(request: Request, id: Long)
+GET     /admin/car/list                         crud.controller.CarController.list(request: Request)
+GET     /admin/car/datatable                    crud.controller.CarController.datatable(request: Request)
+GET     /admin/car/askDelete/:id                crud.controller.CarController.requestDeleteCar(request: Request, id: Long)
+
+# User
+GET     /user/password/reset                    controller.UserController.showResetPasswordPage(request: Request)
+GET     /user/password/reset/newPassword        controller.UserController.showResetPasswordConfirmationPage(request: Request, token: String, email: String)
+GET     /user/password/restore                  controller.UserController.sendResetPasswordConfirmation(request: Request)
+POST    /user/password/reset                    controller.UserController.doResetPassword(request: Request)
+
+GET     /user/register                          controller.UserController.showRegister(request: Request, email: String ?= "")
+POST    /user/register                          controller.UserController.doRegister(request: Request)
+
+GET     /dashboard                              controller.AccountController.dashboard(request: Request)
+GET     /dashboard/profile/edit                 controller.AccountController.editProfile(request: Request)
+POST    /dashboard/profile/edit                 controller.AccountController.doEditProfile(request: Request)
+GET     /dashboard/password/edit                controller.AccountController.editPassword(request: Request)
+POST    /dashboard/password/edit                controller.AccountController.doEditPassword(request: Request)
+
+POST    /upload                                 controller.AccountController.uploadUserAvatar(request: Request)
+GET     /user/delete/avatarImage                controller.AccountController.deleteAvatarImage(request: Request)
+
+# Global Javascript configuration, do not rename route, it is the same URL as in cms.routes and allowes overwriting of javascript-configs used in backend (admin-area)
+GET     /javascripts/config                     controller.JsController.config(request: Request)
+
+GET     /assets/*file                           controllers.Assets.versioned(file)
+
+# Webjar-Assets can get accessed by path "/public/lib" (url: /lib). this path is the same for assets defined
+# in main-project and for the ones defined under modules.
+GET     /lib/*file                              controllers.Assets.at(path="/public/lib", file)
+
+->      /                                       metronic.Routes
+->      /                                       commons.Routes
+->      /                                       cms.Routes

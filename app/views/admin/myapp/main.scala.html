@@ -1,0 +1,68 @@
+@import ch.insign.cms.views.admin.utils.AdminContext
+@import ch.insign.cms.views.html.admin.shared.layout
+@import ch.insign.playauth.views.helper._
+@import party.User
+@import permissions.UserPermission
+@import views.html.admin.myapp._partyPermissions
+
+@this(layout: layout)
+@(implicit req: Http.Request)
+
+@header = {
+    <link rel="stylesheet" href="@{routes.Assets.versioned("stylesheets/show-permissions.css")}" type="text/css" />
+}
+
+@layout(new AdminContext, Messages("myapp.page.title"), "", header, Html.apply("")) {
+    <div class="row form-horizontal">
+        <div class="col-md-12">
+            <div class="portlet">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-user"></i> @Messages("myapp.page.title")
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    @notAnonymous { party =>
+                        <h3 class="form-section">@Messages("myapp.page.user.info")</h3>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">@Messages("myapp.page.user.info.name")</label>
+                            <div class="col-md-6">
+                                <div class="form-control-static" >@party.getName</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">@Messages("myapp.page.user.info.email")</label>
+                            <div class="col-md-6">
+                                <div class="form-control-static" >@party.getEmail</div>
+                            </div>
+                        </div>
+                        <h3 class="form-section">@Messages("myapp.page.user.roles")</h3>
+                        <div class="form-group">
+                                <div class="col-md-3 control-label">@Messages("myapp.page.user.roles.label")</div>
+                            <div class="col-md-6">
+                                @party.getRoles.map { role =>
+                                    <div class="form-control-static">@role.getName</div><br>
+                                }
+                            </div>
+                        </div>
+                        @hasPermission(UserPermission.READ_PHONE(party)) {
+                            <h3 class="form-section">@Messages("myapp.page.user.phone")</h3>
+                            <div class="form-group">
+                                <div class="col-md-3 control-label">@Messages("myapp.page.user.phone.label")</div>
+                                <div class="col-md-6">
+                                    <div class="form-control-static" >@Option(party.asInstanceOf[User].getPhone).getOrElse("-")</div>
+                                </div>
+                            </div>
+                        }
+                        <h3 class="form-section">@Messages("myapp.page.user.permissions")</h3>
+                        <div class="form-group">
+                            <div class="col-lg-offset-3 col-md-offset-4 col-sm-offset-4 col-lg-6 col-md-8 col-sm-6">
+                                @_partyPermissions(Option(party))
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

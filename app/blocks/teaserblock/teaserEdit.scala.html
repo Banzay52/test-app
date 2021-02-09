@@ -1,0 +1,70 @@
+@import ch.insign.cms.views.html.admin._
+@import ch.insign.cms.views.html.helpers._
+@import play.api.i18n.Messages
+@import ch.insign.cms.models.CMS
+@import blocks.teaserblock.TeaserBlock
+
+@(
+        data: TeaserBlock,
+        editForm: Form[_],
+        backURL: String
+)(implicit req: Http.Request)
+
+@mstring(
+    data.getTitle,
+    editForm,
+    "title",
+    Messages("content.block.edit.title.label"),
+    ""
+)
+
+@mstringTextarea(
+    data.getContent,
+    editForm,
+    "content",
+    Messages("content.block.edit.content.label"),
+    "",
+    "tinymce-simple"
+)
+
+@mstring(
+    data.getSubtitle,
+    editForm,
+    "subtitle",
+    Messages("teaser.block.field.subtitle.label"),
+    ""
+)
+
+@if(CMS.getConfig.isResponsiveFileManagerEnable) {
+    @responsiveFileInput(
+        data.getLogoUrl,
+        editForm,
+        "logoUrl",
+        Messages("teaser.block.field.logoUrl.label"),
+        ""
+    )(metronic.constructors.metronic9, req)
+} else {
+    @imageUploadMstring(
+        data.getLogoUrl,
+        editForm,
+        "logoUrl",
+        Messages("teaser.block.field.logoUrl.label"),
+        ""
+    )(metronic.constructors.metronic9, req)
+}
+
+@mstring(
+    data.getLinkUrl,
+    editForm,
+    "linkUrl",
+    Messages("teaser.block.field.linkUrl.label"),
+    ""
+)
+
+@mstring(
+    data.getLinkText,
+    editForm,
+    "linkText",
+    Messages("teaser.block.field.linkText.label"),
+    ""
+)

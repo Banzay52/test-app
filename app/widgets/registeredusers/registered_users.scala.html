@@ -1,0 +1,3 @@
+@(users: List[ch.insign.playauth.party.Party])
+
+@users.map(u => u.getName).mkString(", ")

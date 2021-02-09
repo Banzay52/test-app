@@ -1,0 +1,46 @@
+$fa-font-path: "/lib/font-awesome/fonts";
+$fa-css-prefix: fa;
+@import "lib/font-awesome/scss/font-awesome.scss";
+@import "base/_variables.scss";
+@import "lib/bootstrap/scss/bootstrap.scss";
+@import "lib/play-cms/frontend/css/sortable";
+
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  position: relative;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+main {
+  margin: 5rem 0;
+}
+
+footer {
+  display: flex;
+  background-color: $gray-200;
+  text-align: center;
+  font-size: .8rem;
+  width: 100%;
+  .content-block {
+    width: 100%;
+  }
+  p {
+    margin-top: 1rem;
+  }
+}
+
+.navbar {
+  padding: 0 1rem;
+}
+
+.navbar-brand {
+  padding-top: 0;
+  padding-bottom: 0;
+}

@@ -1,0 +1,48 @@
+@import ch.insign.cms.models.StandalonePage
+@import views.html
+@import party.User
+
+@this(main: html.main)
+@(
+    page: StandalonePage,
+    user: User
+)(implicit req: Http.Request)
+
+@main(page) {
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                @views.html.account.partials.sidebar.render(user)
+            </div>
+            <div class="col-md-9">
+                <h3>
+                    <i class="glyphicon glyphicon-user"></i>
+                    @Messages("account.dashboard.details.profile.title")
+                </h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>
+                            <a class="pull-right" href="@ch.insign.cms.controllers.routes.AuthController.logout(req.path)">
+                                <span> <i class="glyphicon glyphicon-log-out"></i> @Messages("account.dashboard.details.profile.logout")</span>
+                            </a>
+                            <strong>@user.getFirstName @user.getLastName<br></strong>
+                        </p>
+                        <p>
+                            @Messages("user.register.email"): <span>@user.getEmail</span>
+                        </p>
+                        @if(user.getPhone != null && !user.getPhone.isEmpty){
+                            <p>
+                                @Messages("user.register.phone"): <span>@user.getPhone</span>
+                            </p>
+                        }
+                        @if(user.getLanguage != null && !user.getLanguage.isEmpty) {
+                            <p>
+                                @Messages("user.register.language"): <span>@user.getLanguage</span>
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

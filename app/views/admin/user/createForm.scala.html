@@ -1,0 +1,98 @@
+@import ch.insign.cms.models.CMS
+@import ch.insign.cms.views.html.helpers.imageUploadMstring
+@import ch.insign.playauth.party.ISOGender
+@import helper._
+@import play.api.i18n.Messages
+@import scala.collection.JavaConversions.iterableAsScalaIterable
+@import views.html.metronic._
+
+@this(partyCreateForm: ch.insign.cms.views.html.admin.party.createForm)
+@(
+        userForm: Form[_],
+        emailTempates: Form[_]
+)(implicit req: Http.Request)
+
+@partyNameExtension={
+    @inputText(
+        userForm("firstName"),
+        'class -> "form-control",
+        'placeholder -> Messages("backend.user.firstName"),
+        'maxlength -> "25",
+        '_label -> Messages("backend.user.firstName")
+    )
+
+    @inputText(
+        userForm("lastName"),
+        'class -> "form-control",
+        'placeholder -> Messages("backend.user.lastName"),
+        'maxlength -> "30",
+        '_label -> Messages("backend.user.lastName")
+    )
+}
+
+@languages = @{
+    CMS.getConfig().frontendLanguages(req).toSeq.map(v => (v, v))
+}
+
+@partyCreateForm(userForm, emailTempates, partyNameExtenstion = partyNameExtension) {
+
+    @metronic.select(
+        userForm,
+        "gender",
+        Messages("backend.user.gender"),
+        Seq(ISOGender.MALE, ISOGender.FEMALE).map((gender) => (gender.name, Messages("backend.user.gender.label." + gender)))
+    )
+
+    @helper.input(
+        userForm("phone"),
+        'id -> "phone",
+        'name -> "phone",
+        'pattern -> "^\\d{6,11}$",
+        'class -> "form-control",
+        'maxlength -> "11",
+        'placeholder -> Messages("backend.user.phone"),
+        '_label -> Messages("backend.user.phone")
+    ){ (id, name, value, args) =>
+        <input type="text" id="@id" name="@name" value="@value" @toHtmlArgs(args) />
+        <p>@Messages("user.register.phone.hint")</p>
+    }
+
+    @metronic.select(
+        userForm,
+        "language",
+        Messages("backend.user.language"),
+        languages
+    )
+
+    <div class="form-group profile">
+        @helper.input(
+            userForm("phone"),
+            'id -> "phone",
+            'name -> "phone",
+            'pattern -> "^\\d{6,11}$",
+            'class -> "form-control",
+            'maxlength -> "11",
+            'placeholder -> Messages("backend.user.phone"),
+            '_label -> Messages("backend.user.phone")
+        ){ (id, name, value, args) =>
+            <input type="text" id="@id" name="@name" value="@value" @toHtmlArgs(args) >
+            <p>@Messages("user.register.phone.hint")</p>
+        }
+    </div>
+
+    @helper.input(
+        userForm("image"),
+        'id -> "image",
+        'name -> "image",
+        'class -> "form-control",
+        '_label -> Messages("backend.user.image"),
+        'placeholder -> ""
+    ) { (id, name, value, args) =>
+        <div class="input-group">
+            <input type="text" id="@id" name="@name" value="@value" @toHtmlArgs(args) >
+            <span class="input-group-btn">
+                <a class="btn btn-primary image-upload" href="#"> Browse </a>
+            </span>
+        </div>
+    }
+}

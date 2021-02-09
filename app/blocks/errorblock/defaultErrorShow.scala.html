@@ -1,0 +1,37 @@
+@import blocks.errorblock.DefaultErrorPage
+@import ch.insign.api.commons.RichMString._
+@import ch.insign.cms.CMSTemplateApi
+@import ch.insign.cms.permissions.ErrorPagePermission
+@import ch.insign.cms.models.Template
+@import ch.insign.cms.models.CollectionBlock
+@import ch.insign.playauth.views.helper._
+@import views.html.main
+
+@import javax.inject.Provider
+
+@this(templateApi: Provider[CMSTemplateApi])
+@(data: ch.insign.cms.blocks.errorblock.ErrorPage)(implicit req: Http.Request)
+
+@templateApi.get.renderTemplate(templateApi.get.addBlockToSlot(classOf[CollectionBlock], data, DefaultErrorPage.COLLECTION_SLOT), req)
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class=error-section">
+                <h2>@data.getPageTitle.apply()</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+@hasPermission(ErrorPagePermission.READ_MESSAGE(data)) {
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>@Messages("error.id", data.getErrorId)</h2>
+                <div class="alert alert-danger">
+                    @Messages("error.message", data.getErrorMsg)
+                </div>
+            </div>
+        </div>
+    </div>
+}

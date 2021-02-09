@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+
+    <!-- Persistence Unit for Production -->
+    <persistence-unit name="defaultPersistenceUnit" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <non-jta-data-source>DefaultDS</non-jta-data-source>
+
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+        <!-- Note: Currently, orm files with list of entity classes of play cms modules must be listed here, they're not auto-discovered -->
+        <mapping-file>META-INF/play-cms-orm.xml</mapping-file>
+        <mapping-file>META-INF/play-auth-orm.xml</mapping-file>
+        <mapping-file>META-INF/play-commons-orm.xml</mapping-file>
+
+        <properties>
+            <property name="eclipselink.persistence-context.flush-mode" value="auto" />
+            <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
+            <property name="eclipselink.ddl-generation.output-mode" value="database" />
+            <property name="eclipselink.ddl-generation.table-creation-suffix" value="ENGINE=InnoDB;" />
+
+            <!-- for debugging <property name="eclipselink.underlying.shared.default" value="false"/> -->
+
+            <!-- user lowercase letters for field and table names -->
+            <property name="eclipselink.jdbc.uppercase-columns" value="false" />
+
+            <!-- uncomment to enable JPA logging -->
+            <!--property name="eclipselink.logging.file" value="logs/eclipselink.log"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
+            <property name="eclipselink.logging.session" value="true"/>
+            <property name="eclipselink.logging.thread" value="true"/>
+            <property name="eclipselink.logging.timestamp" value="true"/>
+            <property name="eclipselink.logging.exceptions" value="true"/-->
+        </properties>
+    </persistence-unit>
+
+</persistence>

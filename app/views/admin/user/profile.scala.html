@@ -1,0 +1,132 @@
+@import ch.insign.cms.models.CMS
+@import ch.insign.cms.views.admin.utils.AdminContext
+@import ch.insign.cms.views.html.admin.party.userEditPage
+@import ch.insign.playauth.party.Party
+@import java.io.File
+@import org.apache.commons.lang3.StringUtils
+@import party.User
+@import play.api.i18n.Messages
+
+@this(userEditPage: userEditPage)
+@(party: Party, extraMenuItems: Html=Html.apply(""))(implicit req: Http.Request)
+
+@user = @{
+    party.asInstanceOf[User]
+}
+
+@userEditPage(new AdminContext, party, extraMenuItems) {
+    <form class="form-horizontal" role="form">
+        <div class="form-body">
+            @if(!StringUtils.isBlank(user.getImage)){
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">@Messages("backend.user.image")</label>
+                            <div class="col-md-9">
+                                <div><img src="@CMS.getConfig().imageUploadRootPath()@File.separator@user.getImage" style="width: 150px;"/></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">@Messages("backend.user.gender")</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">@Messages("backend.user.gender.label." + user.getGender)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">@Messages("backend.user.firstName")</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">@user.getFirstName</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">@Messages("backend.user.lastName")</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">@user.getLastName</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">@Messages("backend.user.email")</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">
+                                <a href="mailto:@party.getEmail">@party.getEmail</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if(user.getPhone != null && !user.getPhone.isEmpty) {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+
+                            <label class="control-label col-md-3">@Messages("backend.user.phone")</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">@user.getPhone</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if(user.getLanguage != null && !user.getLanguage.isEmpty) {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">@Messages("backend.user.language")</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">@user.getLanguage</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">@Messages("backend.user.roles")</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">
+                            @Html(party.getRoles.map(r => r.toString).mkString("<br>"))
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">@Messages("backend.user.lastLogin")</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">
+                            @Option(user.getLastLogin).getOrElse(Messages("backend.user.lastLogin.notLogged"))
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}

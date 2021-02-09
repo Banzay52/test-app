@@ -1,0 +1,20 @@
+@import crud.page.CarInventoryPage
+@import metronic.text
+@this(pageBlockEdit: ch.insign.cms.views.html.admin.pageBlockEdit)
+@(
+        data: CarInventoryPage,
+        editForm: play.data.Form[_],
+        backURL: String
+)(extension: Html = Html(""))(implicit req: Http.Request)
+
+@pageBlockEdit(data, editForm, backURL) {
+    @text(
+        editForm,
+        "dealerTitle",
+        Messages("example.crud.car.dealer"),
+        "Input car dealer"
+    )
+
+    @* extension allows subclasses to add their content. *@
+    @extension
+}
