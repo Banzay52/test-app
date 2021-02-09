@@ -1,7 +1,7 @@
 # SBT
-project/.*
-project/project
-target
+# project/.*
+# project/project
+# target
 .sbtopts
 
 # Scala.js
@@ -16,15 +16,15 @@ node_modules
 *.iml
 
 # Others
-/data
-/logs
-/tmp
-/dist
-/uploads
-/modules
-/lib
-/version.sbt
-/devops/.env
-/devops/ansible/artifacts
-/devops/docker/db/*.sql
-/server/conf/local.conf
+# /data
+# /logs
+# /tmp
+# /dist
+# /uploads
+# /modules
+# /lib
+# /version.sbt
+# /devops/.env
+# /devops/ansible/artifacts
+# /devops/docker/db/*.sql
+# /server/conf/local.conf
